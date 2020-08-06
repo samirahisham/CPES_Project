@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   Text,
@@ -8,43 +8,19 @@ import {
   Platform,
   View,
   TouchableOpacity,
+  Button,
 } from "react-native";
 
 const MyShoppingList = () => {
-  const myItems = [
-    "itdfhakjlskjdshgejkafwdlawdjsfskdalsjdfkem1",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-  ];
+  const [myItems, setMyItems] = useState([]);
+  const [userInput, setUserInput] = useState("");
+  const handleAddItem = () => {
+    if (userInput != "") {
+      setMyItems([...myItems, userInput]), setUserInput("");
+    }
+  };
   const renderItem = ({ item }) => {
+    const handleChange = (text) => {};
     return (
       <TouchableOpacity style={{ padding: 5 }}>
         <Text style={{ width: "100%" }}>{item}</Text>
@@ -62,6 +38,8 @@ const MyShoppingList = () => {
         }}
       >
         <TextInput
+          onChangeText={(text) => setUserInput(text)}
+          defaultValue={userInput}
           placeholder="enter an Item name"
           style={{
             width: "70%",
@@ -71,6 +49,7 @@ const MyShoppingList = () => {
             marginTop: 30,
           }}
         />
+        <Button title="add item" onPress={handleAddItem} />
         <View
           style={{
             flex: 1,

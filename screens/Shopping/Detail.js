@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,15 @@ import {
 import ShoppingItemObj from "./ShoppingItemObj";
 
 const Detail = ({ route }) => {
+  const [quantity, setQuantity] = useState(0);
+  const handleMinus = () => {
+    if (quantity > 0) setQuantity(quantity - 1);
+  };
+  const handlePlus = () => {
+    if (quantity < ItemAttibtes.stock) setQuantity(quantity + 1);
+  };
   const itemProp = route.params.ItemParam;
+
   const ItemAttibtes = {
     id: 1,
     Reviews: [{ written_review: "good food !", user: "samira" }],
@@ -40,9 +48,9 @@ const Detail = ({ route }) => {
       <View style={{ flex: 1 }}>
         <Text>producer : {ItemAttibtes.Producer.name}</Text>
         <View style={{ flexDirection: "row", marginTop: 10 }}>
-          <Button title="-" onPress={() => console.log("minus")} />
-          <Text> quantity </Text>
-          <Button title="+" onPress={() => console.log("plus")} />
+          <Button title="-" onPress={handleMinus} />
+          <Text> {quantity} </Text>
+          <Button title="+" onPress={handlePlus} />
         </View>
       </View>
       <View style={{ flex: 1 }}>
