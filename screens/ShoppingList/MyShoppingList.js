@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   Text,
@@ -8,48 +8,49 @@ import {
   Platform,
   View,
   TouchableOpacity,
+  Button,
 } from "react-native";
 
 const MyShoppingList = () => {
-  const myItems = [
-    "itdfhakjlskjdshgejkafwdlawdjsfskdalsjdfkem1",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-    "item2",
-    "item3",
-    "item1",
-    "item2",
-    "item3",
-  ];
+  const [myItems, setMyItems] = useState([]);
+  const [userInput, setUserInput] = useState("");
+
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity style={{ padding: 5 }}>
-        <Text style={{ width: "100%" }}>{item}</Text>
+      <TouchableOpacity
+        style={{
+          padding: 5,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginTop: 5,
+        }}
+      >
+        <View>
+          <Text>{item.item}</Text>
+        </View>
+        <View style={{ marginLeft: 10 }}>
+          <Button
+            title="remove"
+            onPress={() =>
+              setMyItems(
+                myItems.filter((element) => {
+                  return element.id != item.id;
+                })
+              )
+            }
+          />
+        </View>
       </TouchableOpacity>
     );
+  };
+  const handlePress = () => {
+    if (userInput != "") {
+      setMyItems([{ item: userInput, id: myItems.length }, ...myItems]);
+      setUserInput("");
+    }
+  };
+  const handleChange = (val) => {
+    setUserInput(val);
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -61,16 +62,21 @@ const MyShoppingList = () => {
           marginTop: (Platform.OS = "android" ? 40 : 20),
         }}
       >
-        <TextInput
-          placeholder="enter an Item name"
-          style={{
-            width: "70%",
-            borderWidth: 1,
-            height: 20,
-            marginBottom: 5,
-            marginTop: 30,
-          }}
-        />
+        <View style={{ flexDirection: "row" }}>
+          <TextInput
+            value={userInput}
+            onChangeText={handleChange}
+            placeholder="enter an Item name"
+            style={{
+              width: "70%",
+              borderWidth: 1,
+              height: 20,
+              marginBottom: 5,
+              marginTop: 30,
+            }}
+          />
+        </View>
+        <Button title="add to list" onPress={handlePress} />
         <View
           style={{
             flex: 1,

@@ -72,7 +72,7 @@ const ShoppingHome = ({ navigation }) => {
       <ShoppingItemObj style={{ flex: 1 }} item={item} />
       <TouchableOpacity
         style={{ justifyContent: "center" }}
-        onPress={console.log("add to cart")}
+        onPress={() => console.log("add to cart")}
       >
         <MaterialIcons name="add-shopping-cart" size={24} color="green" />
       </TouchableOpacity>
