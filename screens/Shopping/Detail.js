@@ -8,8 +8,10 @@ import {
   Button,
 } from "react-native";
 import ShoppingItemObj from "./ShoppingItemObj";
+import { connect } from "react-redux";
+import { addCartAction } from "../../store/actions/CartActions";
 
-const Detail = ({ route }) => {
+const Detail = ({ route, addToCart }) => {
   const [quantity, setQuantity] = useState(0);
   const handleMinus = () => {
     if (quantity > 0) setQuantity(quantity - 1);
@@ -26,7 +28,7 @@ const Detail = ({ route }) => {
     Producer: { name: "The Food co" },
     name: "food",
     img: " http://127.0.0.1:8000/media/155557testImg.jpg ",
-    price: "12",
+    price: 12,
     description: "well made food",
     stock: "15",
   };
@@ -52,6 +54,14 @@ const Detail = ({ route }) => {
           <Text> {quantity} </Text>
           <Button title="+" onPress={handlePlus} />
         </View>
+        {quantity ? (
+          <Button
+            title="Add to Cart"
+            onPress={() => addToCart({ item: itemProp, quantity: quantity })}
+          />
+        ) : (
+          <></>
+        )}
       </View>
       <View style={{ flex: 1 }}>
         <FlatList
@@ -68,8 +78,10 @@ const Detail = ({ route }) => {
     </SafeAreaView>
   );
 };
-
-export default Detail;
+const mapDispatchToProps = (dispatch) => ({
+  addToCart: (item) => dispatch(addCartAction(item)),
+});
+export default connect(null, mapDispatchToProps)(Detail);
 
 const styles = StyleSheet.create({
   container: {

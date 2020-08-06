@@ -7,6 +7,8 @@ import {
 } from "react-native";
 import ShoppingItemObj from "./ShoppingItemObj";
 import { MaterialIcons } from "@expo/vector-icons";
+import { addCartAction } from "../../store/actions/CartActions";
+import { connect } from "react-redux";
 
 const ShopItems = [
   {
@@ -58,7 +60,7 @@ const ShopItems = [
     stock: "40",
   },
 ];
-const ShoppingHome = ({ navigation }) => {
+const ShoppingHome = ({ navigation, addToCart }) => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={{
@@ -72,7 +74,19 @@ const ShoppingHome = ({ navigation }) => {
       <ShoppingItemObj style={{ flex: 1 }} item={item} />
       <TouchableOpacity
         style={{ justifyContent: "center" }}
-        onPress={console.log("add to cart")}
+        onPress={() =>
+          addToCart({
+            item: {
+              id: 5,
+              name: "drink",
+              price: 20,
+              image_url:
+                "https://taw9eelcdn.cachefly.net/media/catalog/product/cache/2/image/519x/9df78eab33525d08d6e5fb8d27136e95/1/_/1_567_100.jpg",
+              stock: "40",
+            },
+            quantity: 1,
+          })
+        }
       >
         <MaterialIcons name="add-shopping-cart" size={24} color="green" />
       </TouchableOpacity>
@@ -91,7 +105,10 @@ const ShoppingHome = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-export default ShoppingHome;
+const mapDispatchToProps = (dispatch) => ({
+  addToCart: (item) => dispatch(addCartAction(item)),
+});
+export default connect(null, mapDispatchToProps)(ShoppingHome);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

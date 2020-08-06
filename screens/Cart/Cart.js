@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   Text,
@@ -9,67 +9,35 @@ import {
   Button,
 } from "react-native";
 import ShoppingItemObj from "../Shopping/ShoppingItemObj";
+import { removeCartAction } from "../../store/actions/CartActions";
 
-const Cart = () => {
-  const myCart = [
-    {
-      item: {
-        id: 1,
-        name: "food",
-        price: 12,
-        image_url:
-          "https://taw9eelcdn.cachefly.net/media/catalog/product/cache/2/image/519x/9df78eab33525d08d6e5fb8d27136e95/1/_/1_567_100.jpg",
-      },
+import { connect } from "react-redux";
 
-      qauntity: 2,
-    },
-    {
-      item: {
-        id: 1,
-        name: "food",
-        price: 12,
-        image_url:
-          "https://taw9eelcdn.cachefly.net/media/catalog/product/cache/2/image/519x/9df78eab33525d08d6e5fb8d27136e95/1/_/1_567_100.jpg",
-      },
+const Cart = ({ myCart, remove }) => {
+  let total = 0;
 
-      qauntity: 2,
-    },
-    {
-      item: {
-        id: 1,
-        name: "food",
-        price: 12,
-        image_url:
-          "https://taw9eelcdn.cachefly.net/media/catalog/product/cache/2/image/519x/9df78eab33525d08d6e5fb8d27136e95/1/_/1_567_100.jpg",
-      },
+  if (myCart)
+    if (myCart.length > 1) {
+      total = myCart.reduce(
+        (prev, next) => prev + next.item.price * next.quantity,
+        0
+      );
+    } else if (myCart.length == 1) {
+      console.log("le cart", myCart);
+      total = myCart[0].item.price;
+    }
 
-      qauntity: 2,
-    },
-    {
-      item: {
-        id: 1,
-        name: "food",
-        price: 12,
-        image_url:
-          "https://taw9eelcdn.cachefly.net/media/catalog/product/cache/2/image/519x/9df78eab33525d08d6e5fb8d27136e95/1/_/1_567_100.jpg",
-      },
-
-      qauntity: 2,
-    },
-  ];
-  const total = myCart.reduce(
-    (prev, next) => prev + next.item.price * next.qauntity,
-    0
-  );
   const renderItem = ({ item }) => {
     return (
-      <View style={{ flex: 1, alignItems: "center" }}>
+      <View style={{ flex: 1 }}>
         <ShoppingItemObj item={item.item} />
+        <Text style={{ fontWeight: "bold" }}>qauntity {item.quantity}</Text>
+        <Button title="remove" onPress={() => remove(item)} />
       </View>
     );
   };
   const handlePress = () => {
-    console.log("checkout");
+    console.log("checkout my cart", myCart);
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -81,12 +49,17 @@ const Cart = () => {
         }}
       >
         <Text style={{ alignSelf: "center" }}>My Cart</Text>
-        <FlatList
-          style={{ width: "100%", marginBottom: 10 }}
-          data={myCart}
-          keyExtractor={(item, idx) => item.item.id.toString() + idx}
-          renderItem={renderItem}
-        />
+        {myCart.length ? (
+          // console.log(myCart)
+          <FlatList
+            style={{ width: "100%", marginBottom: 10 }}
+            data={myCart}
+            // keyExtractor={(item, idx) => item.item.id.toString() + idx}
+            renderItem={renderItem}
+          />
+        ) : (
+          <Text style={{ flex: 1 }}>Empty</Text>
+        )}
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text>Total</Text>
           <Text>{total} KD</Text>
@@ -96,7 +69,12 @@ const Cart = () => {
     </SafeAreaView>
   );
 };
-export default Cart;
+
+const mapDispatchToProps = (dispatch) => ({
+  remove: (item) => dispatch(removeCartAction(item)),
+});
+const mapStateToProps = (state) => ({ myCart: state.rootCart.Cart });
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
